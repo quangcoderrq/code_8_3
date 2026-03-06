@@ -90,8 +90,6 @@ body {
     perspective: 1500px;
 }
 
-/* Perspective for 3D effect on container */
-
 .book-container {
     position: relative;
     width: 90vw;
@@ -148,10 +146,12 @@ body {
 .side.back {
     transform: rotateY(180deg);
     border-radius: 8px 2px 2px 8px;
+    z-index: 0;
 }
 
 .side.front {
     border-radius: 2px 8px 8px 2px;
+    z-index: 1;
 }
 
 /* Specific Page Types */
@@ -228,10 +228,6 @@ body {
     color: #d81b60;
 }
 
-.pattern-bg {
-    background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0, rgba(255, 255, 255, 0.1) 10px, transparent 10px, transparent 20px);
-}
-
 /* Navigation Buttons */
 .controls {
     position: absolute;
@@ -265,7 +261,6 @@ body {
     pointer-events: none;
 }
 
-/* Desktop adjustments for easier reading */
 @media(max-width: 768px) {
     .book-container {
         width: 100vw;
@@ -322,7 +317,6 @@ body {
 .cat-right {
     right: 5px;
     transform: scaleX(-1);
-    /* Mirror the cat */
 }
 
 @media(max-width: 768px) {
