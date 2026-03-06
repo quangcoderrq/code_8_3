@@ -1,38 +1,94 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gửi một nửa thế giới ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <title>Sách Ảnh Kỷ Niệm 8/3 ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <!-- Intro Screen -->
     <div id="intro-screen" class="screen">
         <div class="gift-container">
             <div class="heart-pulse">❤️</div>
-            <p class="instruction">Chạm để mở quà</p>
+            <p class="instruction">Chạm vào trái tim để mở quà</p>
         </div>
     </div>
 
-    <!-- Main Greeting Screen -->
+    <!-- Main Flipbook Screen -->
     <div id="main-screen" class="screen hidden">
         <div id="falling-elements"></div>
-        <div class="card">
-            <h1 class="title">Happy Women's Day</h1>
-            <div class="message-container">
-                <p id="typewriter-text"></p>
+
+        <div class="book-container">
+            <div class="book">
+                <!-- Page 1: Cover -->
+                <div class="page cover front" id="page-1">
+                    <div class="page-content">
+                        <h1 class="title">Our Memories</h1>
+                        <p class="subtitle">Happy Women's Day</p>
+                        <div class="click-hint">Bấm vào mép phải để mở sách 👉</div>
+                    </div>
+                </div>
+
+                <!-- Page 2/3: Spread 1 -->
+                <div class="page back" id="page-2">
+                    <div class="page-content img-page">
+                        <img src="imgs/8c2d747f-e17e-4e81-ab19-98821967b247.jpg" alt="Memory 1">
+                    </div>
+                </div>
+                <div class="page front" id="page-3">
+                    <div class="page-content text-page">
+                        <p class="typewriter-text"
+                            data-text="Mỗi phút giây bên em đều là một kỷ niệm vô giá. Chúc mừng mùng 8 tháng 3 người phụ nữ tuyệt vời nhất! ❤️">
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Page 4/5: Spread 2 -->
+                <div class="page back" id="page-4">
+                    <div class="page-content img-page">
+                        <img src="imgs/bcac3511-3d5a-4068-aead-f8d90f4917ab.jpg" alt="Memory 2">
+                    </div>
+                </div>
+                <div class="page front" id="page-5">
+                    <div class="page-content text-page">
+                        <p class="typewriter-text"
+                            data-text="Hãy luôn nở nụ cười thật tươi nhé, vì nụ cười của em chính là món quà đắt giá nhất đối với anh. Mãi yêu em! 🌹">
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Page 6/7: Back Cover -->
+                <div class="page back" id="page-6">
+                    <div class="page-content text-page center-content">
+                        <h2 class="title ending">HAPPY 8/3!</h2>
+                        <div class="signature">With love 🌷</div>
+                    </div>
+                </div>
+                <div class="page cover front" id="page-7">
+                    <div class="page-content pattern-bg">
+                        <!-- Mặt sau của cuốn sách -->
+                    </div>
+                </div>
+
             </div>
-            <div class="signature">Chúc bạn 8/3 rạng rỡ! 🌹</div>
+            <!-- Navigation controls -->
+            <div class="controls">
+                <button id="prev-btn" class="nav-btn hidden">Trang trước</button>
+                <button id="next-btn" class="nav-btn">Trang sau</button>
+            </div>
         </div>
-        <!-- Thêm một thẻ audio rỗng với link nhạc placeholder từ nguồn miễn phí -->
+
         <audio id="bg-music" loop>
             <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
         </audio>
     </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
