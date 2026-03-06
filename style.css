@@ -106,70 +106,52 @@ body {
 .book {
     position: relative;
     width: 50%;
-    /* Only half width because pages will flip to the left */
     height: 100%;
     transform-style: preserve-3d;
     transform: translateX(50%);
-    /* Move to center initially (closed book) */
     transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
-/* When book is opened, move it to the center so both pages are visible */
 .book.open {
     transform: translateX(0%);
 }
 
-.page {
+.sheet {
     position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
     right: 0;
-    /* Right aligned because spine is on left of right pages */
     transform-origin: left center;
     transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     transform-style: preserve-3d;
-    backface-visibility: hidden;
-    /* Only show the front side of each individual .page div */
-    background: #fffdf5;
-    /* Paper color */
-    box-shadow: inset 5px 0 20px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.2);
-    border-radius: 2px 8px 8px 2px;
+    z-index: 1;
 }
 
-/* Flipped state */
-.page.flipped {
+.sheet.flipped {
     transform: rotateY(-180deg);
 }
 
-/* Page Sides:
-   Front pages represent right-hand side pages when book is closed.
-   Back pages represent left-hand side pages and are initially rotated -180deg.
-*/
-.page.front {
-    z-index: 3;
-}
-
-/* Default z-index handled via JS */
-.page.back {
-    transform: rotateY(-180deg);
-    transform-origin: right center;
-    /* Spine for back pages is on the right */
-    left: 0;
-    right: auto;
-    border-radius: 8px 2px 2px 8px;
-    box-shadow: inset -5px 0 20px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Page Content Styling */
-.page-content {
+.side {
+    position: absolute;
     width: 100%;
     height: 100%;
-    padding: 30px;
-    position: absolute;
+    top: 0;
+    left: 0;
     backface-visibility: hidden;
+    background: #fffdf5;
+    box-shadow: inset 5px 0 20px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
+}
+
+.side.back {
+    transform: rotateY(180deg);
+    border-radius: 8px 2px 2px 8px;
+}
+
+.side.front {
+    border-radius: 2px 8px 8px 2px;
 }
 
 /* Specific Page Types */
@@ -203,27 +185,26 @@ body {
 }
 
 .img-page {
-    padding: 15px;
+    padding: 10px;
+    background-color: #f0f0f0;
 }
 
 .img-page img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     border: 5px solid white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     border-radius: 4px;
-    background-color: #ddd;
-    /* Placeholder color before img loads*/
 }
 
 .text-page {
-    padding: 40px;
+    padding: 30px;
     justify-content: center;
 }
 
 .typewriter-text {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     line-height: 1.8;
     color: #4a2333;
     font-weight: 600;
@@ -231,13 +212,14 @@ body {
 
 .ending {
     text-align: center;
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     color: #d81b60;
     margin-bottom: 20px;
 }
 
 .center-content {
     align-items: center;
+    justify-content: center;
 }
 
 .signature {
