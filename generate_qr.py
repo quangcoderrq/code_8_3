@@ -2,9 +2,8 @@ import qrcode
 import os
 
 # Đường dẫn đến file hoặc URL muốn hiển thị khi quét mã
-# Khi bạn đưa web lên mạng (VD: github pages, vercel), hãy thay thế URL này.
-# Hiện tại để một link demo mẫu:
-url_to_encode = "https://www.youtube.com/watch?v=dQw4w9WgXcQ" # Link tạm thời
+# URL trang web GitHub Pages của bạn:
+url_to_encode = "https://quangcoderrq.github.io/code_8_3/" 
 
 def generate_qr_code(url, filename="qrcode.png"):
     print(f"Bắt đầu tạo QR code cho URL: {url}")
