@@ -228,6 +228,38 @@ body {
     color: #d81b60;
 }
 
+/* --- FLOATING HEARTS --- */
+#hearts-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.floating-heart {
+    position: absolute;
+    bottom: -20px;
+    color: #ff4d6d;
+    font-size: 20px;
+    opacity: 0.8;
+    animation: rise var(--duration) linear forwards;
+}
+
+@keyframes rise {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
 /* Navigation Buttons */
 .controls {
     position: absolute;
@@ -261,35 +293,84 @@ body {
     pointer-events: none;
 }
 
+/* --- MOBILE OPTIMIZATION --- */
 @media(max-width: 768px) {
-    .book-container {
-        width: 100vw;
-        aspect-ratio: 1.2 / 1;
-        height: auto;
+    body {
+        background: linear-gradient(180deg, #ff9a9e 0%, #fecfef 100%);
     }
 
-    .page-content {
+    .book-container {
+        width: 100vw;
+        height: 60vh;
+        max-height: 500px;
+        aspect-ratio: 0.7 / 1;
+        /* Portrait aspect ratio for mobile */
+    }
+
+    .book {
+        width: 100%;
+        /* Full width on mobile to show 1 page */
+        transform: translateX(0);
+        /* Center the book */
+    }
+
+    .book.open {
+        transform: translateX(0);
+        /* No translation needed when open on mobile */
+    }
+
+    .sheet {
+        width: 100%;
+    }
+
+    .side {
         padding: 15px;
     }
 
     .cover .title {
-        font-size: 1.8rem;
-        margin-top: 15%;
+        font-size: 2rem;
+        margin-top: 25%;
     }
 
     .typewriter-text {
-        font-size: 0.95rem;
-        line-height: 1.4;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .img-page img {
+        border-width: 3px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
     .controls {
-        bottom: -40px;
-        padding: 0 10px;
+        position: fixed;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        padding: 0 20px;
+        z-index: 100;
+        justify-content: space-around;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        height: 60px;
+        align-items: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .nav-btn {
-        font-size: 0.85rem;
-        padding: 6px 12px;
+        width: 45%;
+        text-align: center;
+        background: #d81b60;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3);
+    }
+
+    .nav-btn:active {
+        transform: scale(0.95);
     }
 }
 
@@ -326,7 +407,7 @@ body {
     }
 }
 
-/* Falling Elements */
+/* --- FALLING PETALS --- */
 #falling-elements {
     position: absolute;
     top: 0;
@@ -339,7 +420,7 @@ body {
 
 .petal {
     position: absolute;
-    background-color: rgba(255, 105, 180, 0.6);
+    background-color: rgba(255, 105, 180, 0.4);
     border-radius: 50% 0 50% 50%;
     transform: rotate(45deg);
     animation: fall linear infinite;

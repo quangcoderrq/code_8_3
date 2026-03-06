@@ -23,37 +23,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const sheets = document.querySelectorAll('.sheet');
+    const heartsContainer = document.getElementById('hearts-container');
 
     let currentSheet = 0;
+    const isMobile = window.innerWidth <= 768;
 
     function initPages() {
         sheets.forEach((sheet, index) => {
             sheet.style.zIndex = sheets.length - index;
         });
+        createHearts();
     }
 
     const turnPageNext = () => {
         if (currentSheet < sheets.length) {
-            if (currentSheet === 0) book.classList.add('open');
+            if (currentSheet === 0 && !isMobile) book.classList.add('open');
 
             const sheet = sheets[currentSheet];
             sheet.classList.add('flipped');
 
-            // After flip, adjust z-index to stack correctly on the left
             setTimeout(() => {
                 sheet.style.zIndex = 20 + currentSheet;
             }, 600);
 
             currentSheet++;
 
-            // Trigger typewriter for the next sheet's front side (right page)
             if (currentSheet < sheets.length) {
                 const nextSheet = sheets[currentSheet];
+                // Mobile: reveal sheet front, Desktop: reveal spread
                 triggerTypewriter(nextSheet.querySelector('.side.front'));
             } else {
-                // End cover spread
-                book.classList.remove('open');
-                book.style.transform = 'translateX(100%)';
+                if (!isMobile) {
+                    book.classList.remove('open');
+                    book.style.transform = 'translateX(100%)';
+                }
             }
         }
         updateButtons();
@@ -65,14 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const sheet = sheets[currentSheet];
             sheet.classList.remove('flipped');
 
-            // Revert z-index back to stack on the right
             sheet.style.zIndex = sheets.length - currentSheet;
 
             if (currentSheet === 0) {
                 book.classList.remove('open');
             } else {
-                book.classList.add('open');
-                book.style.transform = 'translateX(0%)';
+                if (!isMobile) {
+                    book.classList.add('open');
+                    book.style.transform = 'translateX(0%)';
+                }
             }
         }
         updateButtons();
@@ -95,6 +99,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- HEARTS PARTICLES ---
+    function createHearts() {
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerHTML = ['❤️', '💖', '💗', '💕', '💘'][Math.floor(Math.random() * 5)];
+
+            const side = Math.random() > 0.5 ? 'left' : 'right';
+            const xPos = side === 'left' ? Math.random() * 20 : 80 + Math.random() * 20;
+
+            heart.style.left = xPos + 'vw';
+            const duration = Math.random() * 3 + 4;
+            heart.style.setProperty('--duration', duration + 's');
+            heart.style.fontSize = (Math.random() * 10 + 20) + 'px';
+
+            heartsContainer.appendChild(heart);
+
+            setTimeout(() => heart.remove(), duration * 1000);
+        }, 500);
+    }
 
     // --- TYPEWRITER LOGIC ---
     // Only type when page is revealed
@@ -102,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const typingSpeed = 50;
 
     function triggerTypewriter(pageElement) {
+        if (!pageElement) return;
         const textElement = pageElement.querySelector('.typewriter-text');
         if (!textElement) return;
 
@@ -115,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Delay typing until page turn animation finishes (approx 1s)
         setTimeout(() => {
             typeWriter(textElement, fullText, 0);
-        }, 1000);
+        }, 800);
     }
 
     function typeWriter(element, text, i) {
@@ -128,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FALLING PETALS ---
     function createPetals() {
-        const petalCount = 30;
+        const petalCount = 20;
         for (let i = 0; i < petalCount; i++) {
             setTimeout(createSinglePetal, Math.random() * 3000);
         }
@@ -137,12 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function createSinglePetal() {
         const petal = document.createElement('div');
         petal.classList.add('petal');
-        const size = Math.random() * 15 + 10;
+        const size = Math.random() * 12 + 8;
         petal.style.width = `${size}px`;
         petal.style.height = `${size}px`;
         petal.style.left = `${Math.random() * 100}vw`;
         petal.style.animationDuration = `${Math.random() * 4 + 4}s`;
-        petal.style.opacity = Math.random() * 0.5 + 0.3;
+        petal.style.opacity = Math.random() * 0.4 + 0.2;
 
         fallingElementsContainer.appendChild(petal);
         setTimeout(() => {
