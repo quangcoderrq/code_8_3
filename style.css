@@ -313,22 +313,17 @@ body {
 
     .book-container {
         width: 100vw;
-        height: 80vh;
-        /* More height for better image view */
-        max-height: none;
+        height: 70vh;
+        /* Reduced to avoid button overlap */
+        max-height: 500px;
         padding: 10px;
         perspective: 1500px;
     }
 
     .book {
-        width: 90%;
+        width: 85%;
         height: 100%;
-        left: 5%;
-        transform: none !important;
-        /* Force center */
-    }
-
-    .book.open {
+        left: 7.5%;
         transform: none !important;
     }
 
@@ -336,59 +331,55 @@ body {
         width: 100%;
         left: 0;
         transform-origin: center center;
-        /* Flip in place on mobile */
+        transition: transform 0.6s ease-in-out, opacity 0.4s;
     }
 
-    .sheet.flipped {
-        transform: rotateY(-180deg);
+    /* Swipe-away animation for previous sheets on Mobile */
+    .sheet.exit {
+        transform: translateX(-150%) rotate(-15deg) !important;
+        opacity: 0;
     }
 
     .side {
         padding: 15px;
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
         border-radius: 20px !important;
-        /* CRITICAL: hidden to prevent mirroring effect when flipping */
         backface-visibility: hidden !important;
         -webkit-backface-visibility: hidden !important;
     }
 
     .side.back {
-        /* Back must be mirrored correctly for center flip axis */
         transform: rotateY(180deg) !important;
     }
 
-    /* Ensure newly revealed sheets are high z-index on mobile */
-    .sheet.flipped {
-        z-index: 50 !important;
-    }
-
     .typewriter-text {
-        font-size: 1.25rem;
+        font-size: 1.2rem;
         line-height: 1.5;
         text-align: center;
-        padding: 10px;
+        padding: 5px;
         width: 100%;
         color: #4a2333;
     }
 
-    /* Redesigned Glassmorphism Pill Buttons */
+    /* Glassmorphism Buttons at the absolute bottom */
     .controls {
         position: fixed;
-        bottom: 50px;
+        bottom: 20px;
+        /* Moved lower */
         left: 0;
         width: 100%;
-        padding: 0 30px;
-        z-index: 1000;
+        padding: 0 20px;
+        z-index: 2000;
         display: flex;
-        gap: 15px;
+        gap: 12px;
         justify-content: center;
     }
 
     .nav-btn {
         flex: 1;
-        max-width: 150px;
-        padding: 14px 10px;
-        font-size: 0.9rem;
+        max-width: 130px;
+        padding: 12px 5px;
+        font-size: 0.85rem;
         font-weight: 700;
         background: rgba(255, 255, 255, 0.25);
         color: white !important;
@@ -400,12 +391,6 @@ body {
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
-    }
-
-    .nav-btn:active {
-        transform: scale(0.95);
-        background: rgba(255, 255, 255, 0.4);
     }
 
     #next-btn {
