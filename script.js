@@ -167,29 +167,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- TYPEWRITER ---
-    const typedElements = new Set();
+    const typeTimeouts = new Map();
     const typingSpeed = 50;
 
     function triggerTypewriter(pageElement) {
         if (!pageElement) return;
         const textElement = pageElement.querySelector('.typewriter-text');
         if (!textElement) return;
-        if (typedElements.has(textElement)) return;
 
-        typedElements.add(textElement);
+        // Cancel any ongoing typing for this element
+        if (typeTimeouts.has(textElement)) {
+            clearTimeout(typeTimeouts.get(textElement));
+        }
+
         const fullText = textElement.getAttribute('data-text');
+        // Clear immediately so it does not show all at once
         textElement.innerHTML = '';
 
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
             typeWriter(textElement, fullText, 0);
-        }, 800);
+        }, 600);
+        typeTimeouts.set(textElement, timeoutId);
     }
 
     function typeWriter(element, text, i) {
         if (i < text.length) {
             element.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(() => typeWriter(element, text, i), typingSpeed);
+            const timeoutId = setTimeout(() => typeWriter(element, text, i + 1), typingSpeed);
+            typeTimeouts.set(element, timeoutId);
         }
     }
 
