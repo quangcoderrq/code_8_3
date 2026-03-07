@@ -43,23 +43,25 @@ document.addEventListener('DOMContentLoaded', () => {
             // Adjust z-index after flip to stack correctly
             setTimeout(() => {
                 sheet.style.zIndex = 20 + currentSheet;
-            }, 600);
+            }, isMobile ? 300 : 600); // Faster z-index swap on mobile to avoid covering
 
             // On mobile, trigger typewriter for the BACK of the sheet that just flipped
             if (isMobile) {
                 const backSide = sheet.querySelector('.side.back');
                 if (backSide && backSide.classList.contains('text-page')) {
-                    triggerTypewriter(backSide);
+                    // Longer delay on mobile to wait for full 180deg flip
+                    setTimeout(() => triggerTypewriter(backSide), 400);
                 }
             }
 
             currentSheet++;
 
-            // Trigger typewriter for the side becoming visible
+            // Trigger typewriter for the next side becoming visible
             if (currentSheet < sheets.length) {
                 const nextSheet = sheets[currentSheet];
                 // Desktop: reveal spread (right page is front). Mobile: next card is front.
-                triggerTypewriter(nextSheet.querySelector('.side.front'));
+                const delay = isMobile ? 1000 : 800;
+                setTimeout(() => triggerTypewriter(nextSheet.querySelector('.side.front')), delay);
             } else if (!isMobile) {
                 // End spread
                 book.classList.remove('open');
