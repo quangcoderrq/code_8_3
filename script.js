@@ -32,13 +32,23 @@ document.addEventListener('DOMContentLoaded', () => {
         currentSlideIndex = 0;
     }
 
+    // --- AUDIO AUTOPLAY ATTEMPT ---
+    bgMusic.volume = 0.4;
+    const attemptPlay = () => {
+        if (bgMusic.paused) {
+            bgMusic.play().catch(e => console.log("Audio play prevented", e));
+        }
+    };
+    // Try immediately
+    attemptPlay();
+    // Try on any user interaction
+    document.body.addEventListener('click', attemptPlay, { once: true });
+    document.body.addEventListener('touchstart', attemptPlay, { once: true });
+
     // --- INITIALIZATION ---
     introScreen.addEventListener('click', () => {
         introScreen.classList.add('hidden');
         mainScreen.classList.remove('hidden');
-
-        bgMusic.volume = 0.4;
-        bgMusic.play().catch(e => console.log("Audio autoplay prevented", e));
 
         createPetals();
         createHearts();
@@ -127,6 +137,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const backSide = sheet.querySelector('.side.back');
             setTimeout(() => triggerTypewriter(backSide), 600);
 
+            // Trigger typewriter for the front of the next sheet
+            if (currentSheet + 1 < sheets.length) {
+                const nextFrontSide = sheets[currentSheet + 1].querySelector('.side.front');
+                setTimeout(() => triggerTypewriter(nextFrontSide), 600);
+            }
+
             currentSheet++;
         }
     };
@@ -142,6 +158,16 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 book.classList.add('open');
                 book.style.transform = 'translateX(0%)';
+            }
+
+            // Trigger typewriter for the front of the flipped-back sheet
+            const frontSide = sheet.querySelector('.side.front');
+            setTimeout(() => triggerTypewriter(frontSide), 600);
+
+            // Trigger typewriter for the back of the previous sheet
+            if (currentSheet > 0) {
+                const prevBackSide = sheets[currentSheet - 1].querySelector('.side.back');
+                setTimeout(() => triggerTypewriter(prevBackSide), 600);
             }
         }
     };
