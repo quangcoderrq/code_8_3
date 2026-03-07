@@ -45,13 +45,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 sheet.style.zIndex = 20 + currentSheet;
             }, 600);
 
+            // On mobile, trigger typewriter for the BACK of the sheet that just flipped
+            if (isMobile) {
+                const backSide = sheet.querySelector('.side.back');
+                if (backSide && backSide.classList.contains('text-page')) {
+                    triggerTypewriter(backSide);
+                }
+            }
+
             currentSheet++;
 
             // Trigger typewriter for the side becoming visible
             if (currentSheet < sheets.length) {
                 const nextSheet = sheets[currentSheet];
-                // In spread mode (Desktop), front is next right page. 
-                // In single mode (Mobile), front of next sheet is the NEW page.
+                // Desktop: reveal spread (right page is front). Mobile: next card is front.
                 triggerTypewriter(nextSheet.querySelector('.side.front'));
             } else if (!isMobile) {
                 // End spread
