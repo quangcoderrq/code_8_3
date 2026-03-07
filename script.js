@@ -37,8 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
         introScreen.classList.add('hidden');
         mainScreen.classList.remove('hidden');
 
-        // Set YouTube iframe src to autoplay
-        bgMusic.src = "https://www.youtube.com/embed/FwFYMtxlSp0?autoplay=1&loop=1&playlist=FwFYMtxlSp0";
+        bgMusic.volume = 0.4;
+        bgMusic.play().catch(e => console.log("Audio autoplay prevented", e));
 
         createPetals();
         createHearts();

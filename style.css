@@ -89,6 +89,11 @@ body {
     z-index: 10;
     perspective: 2000px;
     /* Increased perspective for better 3D */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
 }
 
 .book-container {
@@ -270,12 +275,13 @@ body {
 
 /* Navigation Buttons */
 .controls {
-    position: absolute;
-    bottom: -70px;
+    position: relative;
     width: 100%;
+    max-width: 700px;
     display: flex;
     justify-content: space-between;
     padding: 0 50px;
+    margin-top: 30px;
 }
 
 .nav-btn {
