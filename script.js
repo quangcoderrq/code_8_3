@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const attemptPlay = () => {
         if (bgMusic.paused) {
             if (!hasStartedAt20) {
-                bgMusic.currentTime = 20;
+                bgMusic.currentTime = 54;
                 hasStartedAt20 = true;
             }
             bgMusic.play().catch(e => console.log("Audio play prevented", e));
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Custom loop: restart from 20s
     bgMusic.addEventListener('ended', () => {
-        bgMusic.currentTime = 20;
+        bgMusic.currentTime = 54;
         bgMusic.play();
     });
 
