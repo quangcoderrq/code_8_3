@@ -10,8 +10,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const sheets = document.querySelectorAll('.sheet');
 
     let currentSheet = 0;
-    let isBackVisible = false;
     const isMobile = window.innerWidth <= 768;
+
+    // --- MOBILE 2D SLIDER LOGIC ---
+    let mobileSlides = [];
+    let currentSlideIndex = 0;
+
+    function initMobileSlides() {
+        mobileSlides = Array.from(document.querySelectorAll('.side'));
+
+        mobileSlides.forEach((slide, index) => {
+            slide.classList.remove('active', 'prev', 'next', 'flipped', 'exit');
+            slide.style.transform = '';
+
+            if (index === 0) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.add('next');
+            }
+        });
+        currentSlideIndex = 0;
+    }
 
     // --- INITIALIZATION ---
     introScreen.addEventListener('click', () => {
@@ -23,7 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         createPetals();
         createHearts();
-        initPages();
+
+        if (isMobile) {
+            initMobileSlides();
+            // Start first page typewriter immediately if it's a text page
+            triggerTypewriter(mobileSlides[0]);
+        } else {
+            initPages();
+        }
     });
 
     function initPages() {
@@ -45,45 +71,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const handleMobileNext = () => {
-        if (currentSheet >= sheets.length) return;
+        if (currentSlideIndex >= mobileSlides.length - 1) return;
 
-        const sheet = sheets[currentSheet];
-        if (!isBackVisible) {
-            // Step 1: Flip current card to show BACK
-            sheet.classList.add('flipped');
-            sheet.style.transform = 'rotateY(-180deg)';
-            isBackVisible = true;
-            // Reveal back side text if any
-            const backSide = sheet.querySelector('.side.back');
-            setTimeout(() => triggerTypewriter(backSide), 600);
-        } else {
-            // Step 2: Push card away to show NEXT FRONT
-            sheet.classList.add('exit');
-            currentSheet++;
-            isBackVisible = false;
-            if (currentSheet < sheets.length) {
-                const nextFront = sheets[currentSheet].querySelector('.side.front');
-                setTimeout(() => triggerTypewriter(nextFront), 600);
-            }
-        }
-    };
+        // Current becomes prev
+        const currentSlide = mobileSlides[currentSlideIndex];
+        currentSlide.classList.remove('active');
+        currentSlide.classList.add('prev');
 
-    const handleDesktopNext = () => {
-        if (currentSheet < sheets.length) {
-            if (currentSheet === 0) book.classList.add('open');
-            const sheet = sheets[currentSheet];
-            sheet.classList.add('flipped');
-            setTimeout(() => {
-                sheet.style.zIndex = 20 + currentSheet;
-            }, 600);
-            currentSheet++;
-            if (currentSheet < sheets.length) {
-                triggerTypewriter(sheets[currentSheet].querySelector('.side.front'));
-            } else {
-                book.classList.remove('open');
-                book.style.transform = 'translateX(100%)';
-            }
-        }
+        // Next becomes current
+        currentSlideIndex++;
+        const nextSlide = mobileSlides[currentSlideIndex];
+        nextSlide.classList.remove('next');
+        nextSlide.classList.add('active');
+
+        // Trigger typewriter if text page
+        setTimeout(() => triggerTypewriter(nextSlide), 300);
     };
 
     const turnPagePrev = () => {
@@ -96,20 +98,36 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const handleMobilePrev = () => {
-        if (currentSheet === 0 && !isBackVisible) return;
+        if (currentSlideIndex <= 0) return;
 
-        if (isBackVisible) {
-            // Flip back to show front
+        // Current becomes next
+        const currentSlide = mobileSlides[currentSlideIndex];
+        currentSlide.classList.remove('active');
+        currentSlide.classList.add('next');
+
+        // Prev becomes current
+        currentSlideIndex--;
+        const prevSlide = mobileSlides[currentSlideIndex];
+        prevSlide.classList.remove('prev');
+        prevSlide.classList.add('active');
+
+        // Trigger typewriter if text page
+        setTimeout(() => triggerTypewriter(prevSlide), 300);
+    };
+
+    const handleDesktopNext = () => {
+        if (currentSheet < sheets.length) {
+            book.classList.add('open');
+            book.style.transform = 'translateX(0%)';
             const sheet = sheets[currentSheet];
-            sheet.classList.remove('flipped');
-            sheet.style.transform = 'rotateY(0deg)';
-            isBackVisible = false;
-        } else {
-            // Bring back previous sheet from exit
-            currentSheet--;
-            const sheet = sheets[currentSheet];
-            sheet.classList.remove('exit');
-            isBackVisible = true;
+            sheet.classList.add('flipped');
+            sheet.style.zIndex = currentSheet + 1;
+
+            // Trigger typewriter for the back of the flipped sheet
+            const backSide = sheet.querySelector('.side.back');
+            setTimeout(() => triggerTypewriter(backSide), 600);
+
+            currentSheet++;
         }
     };
 
@@ -134,8 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateButtons() {
         let isStart, isEnd;
         if (isMobile) {
-            isStart = (currentSheet === 0 && !isBackVisible);
-            isEnd = (currentSheet === sheets.length - 1 && isBackVisible);
+            isStart = (currentSlideIndex === 0);
+            isEnd = (currentSlideIndex === mobileSlides.length - 1);
         } else {
             isStart = (currentSheet === 0);
             isEnd = (currentSheet === sheets.length);

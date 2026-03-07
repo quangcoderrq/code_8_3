@@ -324,56 +324,105 @@ body {
     }
 
     .book-container {
-        width: 100vw;
-        flex: 1;
-        /* Take all available space */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        perspective: 2000px;
+        width: 85vw;
+        height: 70vh;
+        max-height: 550px;
+        position: relative;
+        perspective: none !important;
+        /* NO 3D */
         z-index: 10;
         margin: 0 !important;
-        padding: 10px !important;
-        max-height: none !important;
-        height: auto !important;
+        padding: 0 !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+        background: white;
+        overflow: hidden;
+        /* Hide slides that are out of bounds */
     }
 
     .book {
-        width: 85%;
-        height: 80%;
-        /* Fit within container */
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
         left: 0;
-        position: relative;
         transform: none !important;
     }
 
     .sheet {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
         width: 100%;
         height: 100%;
-        left: 0;
-        transform-origin: center center;
-        transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s;
+        transform: none !important;
+        transition: none !important;
+        pointer-events: none;
+        /* Let clicks pass through to active slide */
     }
 
     .sheet.exit {
-        transform: translateX(-150%) rotate(-15deg) !important;
-        opacity: 0;
+        transform: none !important;
+        opacity: 1;
     }
 
     .side {
-        padding: 25px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-        border-radius: 30px !important;
-        backface-visibility: hidden !important;
-        -webkit-backface-visibility: hidden !important;
+        position: absolute !important;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        /* Crucial to keep padding from exploding height */
+        padding: 20px;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+        transform: translateX(100%);
+        /* Start off-screen right */
+        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        z-index: 1;
+        background: #fffdf5;
+        pointer-events: auto;
+    }
+
+    .side .page-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+    }
+
+    .cover {
+        background: linear-gradient(45deg, #d81b60, #ff7eb3);
     }
 
     .side.back {
-        transform: rotateY(180deg) !important;
+        transform: translateX(100%) !important;
+    }
+
+    /* Slider specific classes */
+    .side.active {
+        transform: translateX(0) !important;
+        z-index: 5;
+    }
+
+    .side.prev {
+        transform: translateX(-100%) !important;
+        z-index: 1;
+    }
+
+    .side.next {
+        transform: translateX(100%) !important;
+        z-index: 1;
     }
 
     .typewriter-text {
@@ -386,40 +435,44 @@ body {
         margin: 0;
     }
 
-    /* Fixed Glassmorphism Buttons - NOW PHYSICALLY BELOW THE CARD */
+    /* Fixed Glassmorphism Buttons - Bottom Bar Style */
     .controls {
         position: static !important;
-        /* Non-overlapping */
         width: 100%;
-        padding: 10px 40px !important;
+        padding: 0 40px !important;
         z-index: 20;
         display: flex;
-        gap: 20px;
+        gap: 15px;
         justify-content: center;
+        align-items: center;
+        height: auto;
     }
 
     .nav-btn {
-        flex: 1;
-        max-width: 140px;
-        padding: 14px 5px;
-        font-size: 0.9rem;
-        font-weight: 700;
-        background: rgba(255, 255, 255, 0.35);
-        color: white !important;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        border-radius: 50px;
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        flex: 0 1 110px;
+        /* Small fixed width */
+        padding: 10px 15px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.4);
+        color: #d81b60 !important;
+        /* Pink text for contrast */
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 30px;
+        /* Pill shape */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         display: flex;
         align-items: center;
         justify-content: center;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
     #next-btn {
-        background: rgba(231, 38, 116, 0.95);
-        border-color: rgba(255, 255, 255, 0.7);
+        background: white;
+        color: #d81b60 !important;
+        border-color: white;
+        font-weight: 700;
     }
 }
 
