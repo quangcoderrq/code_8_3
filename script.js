@@ -34,11 +34,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- AUDIO AUTOPLAY ATTEMPT ---
     bgMusic.volume = 0.4;
+    let hasStartedAt20 = false;
+
     const attemptPlay = () => {
         if (bgMusic.paused) {
+            if (!hasStartedAt20) {
+                bgMusic.currentTime = 20;
+                hasStartedAt20 = true;
+            }
             bgMusic.play().catch(e => console.log("Audio play prevented", e));
         }
     };
+
+    // Custom loop: restart from 20s
+    bgMusic.addEventListener('ended', () => {
+        bgMusic.currentTime = 20;
+        bgMusic.play();
+    });
+
     // Try immediately
     attemptPlay();
     // Try on any user interaction
