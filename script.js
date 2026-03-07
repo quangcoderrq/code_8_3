@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let isStart, isEnd;
         if (isMobile) {
             isStart = (currentSheet === 0 && !isBackVisible);
-            isEnd = (currentSheet === sheets.length);
+            isEnd = (currentSheet === sheets.length - 1 && isBackVisible);
         } else {
             isStart = (currentSheet === 0);
             isEnd = (currentSheet === sheets.length);
