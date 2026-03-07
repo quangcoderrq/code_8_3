@@ -347,33 +347,37 @@ body {
         padding: 15px;
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
         border-radius: 20px !important;
-        /* Fix for mobile 3D layering */
-        backface-visibility: visible !important;
+        /* CRITICAL: hidden to prevent mirroring effect when flipping */
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
     }
 
     .side.back {
-        transform: rotateY(180deg);
+        /* Back must be mirrored correctly for center flip axis */
+        transform: rotateY(180deg) !important;
     }
 
-    /* Target specific text pages to stay on top during flip on mobile */
-    .sheet.flipped .side.back.text-page {
+    /* Ensure newly revealed sheets are high z-index on mobile */
+    .sheet.flipped {
         z-index: 50 !important;
     }
 
     .typewriter-text {
-        font-size: 1.2rem;
-        line-height: 1.6;
+        font-size: 1.25rem;
+        line-height: 1.5;
         text-align: center;
         padding: 10px;
+        width: 100%;
+        color: #4a2333;
     }
 
     /* Redesigned Glassmorphism Pill Buttons */
     .controls {
         position: fixed;
-        bottom: 40px;
+        bottom: 50px;
         left: 0;
         width: 100%;
-        padding: 0 25px;
+        padding: 0 30px;
         z-index: 1000;
         display: flex;
         gap: 15px;
@@ -382,34 +386,31 @@ body {
 
     .nav-btn {
         flex: 1;
-        max-width: 160px;
-        padding: 14px 20px;
-        font-size: 0.95rem;
+        max-width: 150px;
+        padding: 14px 10px;
+        font-size: 0.9rem;
         font-weight: 700;
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.25);
+        color: white !important;
+        border: 1.5px solid rgba(255, 255, 255, 0.4);
         border-radius: 50px;
-        /* Pill shape */
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         display: flex;
         align-items: center;
         justify-content: center;
-        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
     }
 
     .nav-btn:active {
-        transform: scale(0.92);
-        background: rgba(255, 255, 255, 0.3);
+        transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.4);
     }
 
     #next-btn {
-        background: rgba(216, 27, 96, 0.6);
-        border-color: rgba(255, 255, 255, 0.5);
+        background: rgba(216, 27, 96, 0.7);
+        border-color: rgba(255, 255, 255, 0.6);
     }
 }
 
