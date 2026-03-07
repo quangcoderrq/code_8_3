@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sheets = document.querySelectorAll('.sheet');
 
     let currentSheet = 0;
+    let isBackVisible = false;
     const isMobile = window.innerWidth <= 768;
 
     // --- INITIALIZATION ---
@@ -29,82 +30,118 @@ document.addEventListener('DOMContentLoaded', () => {
         sheets.forEach((sheet, index) => {
             sheet.style.zIndex = sheets.length - index;
         });
+        // Start first page typewriter immediately
+        triggerTypewriter(sheets[0].querySelector('.side.front'));
     }
 
     // --- TURN LOGIC ---
     const turnPageNext = () => {
-        if (currentSheet < sheets.length) {
-            // Deskto-only translation logic
-            if (currentSheet === 0 && !isMobile) book.classList.add('open');
-
-            const sheet = sheets[currentSheet];
-            sheet.classList.add('flipped');
-
-            // Adjust z-index after flip to stack correctly
-            setTimeout(() => {
-                sheet.style.zIndex = 20 + currentSheet;
-            }, isMobile ? 300 : 600); // Faster z-index swap on mobile to avoid covering
-
-            // On mobile, trigger typewriter for the BACK of the sheet that just flipped
-            if (isMobile) {
-                const backSide = sheet.querySelector('.side.back');
-                if (backSide && backSide.classList.contains('text-page')) {
-                    // Longer delay on mobile to wait for full 180deg flip
-                    setTimeout(() => triggerTypewriter(backSide), 400);
-                }
-            }
-
-            currentSheet++;
-
-            // Trigger typewriter for the next side becoming visible
-            if (currentSheet < sheets.length) {
-                const nextSheet = sheets[currentSheet];
-                // Desktop: reveal spread (right page is front). Mobile: next card is front.
-                const delay = isMobile ? 1000 : 800;
-                setTimeout(() => triggerTypewriter(nextSheet.querySelector('.side.front')), delay);
-            } else if (!isMobile) {
-                // End spread
-                book.classList.remove('open');
-                book.style.transform = 'translateX(100%)';
-            }
+        if (isMobile) {
+            handleMobileNext();
+        } else {
+            handleDesktopNext();
         }
         updateButtons();
     };
 
+    const handleMobileNext = () => {
+        if (currentSheet >= sheets.length) return;
+
+        const sheet = sheets[currentSheet];
+        if (!isBackVisible) {
+            // Step 1: Flip current card to show BACK
+            sheet.classList.add('flipped');
+            sheet.style.transform = 'rotateY(-180deg)';
+            isBackVisible = true;
+            // Reveal back side text if any
+            const backSide = sheet.querySelector('.side.back');
+            setTimeout(() => triggerTypewriter(backSide), 600);
+        } else {
+            // Step 2: Push card away to show NEXT FRONT
+            sheet.classList.add('exit');
+            currentSheet++;
+            isBackVisible = false;
+            if (currentSheet < sheets.length) {
+                const nextFront = sheets[currentSheet].querySelector('.side.front');
+                setTimeout(() => triggerTypewriter(nextFront), 600);
+            }
+        }
+    };
+
+    const handleDesktopNext = () => {
+        if (currentSheet < sheets.length) {
+            if (currentSheet === 0) book.classList.add('open');
+            const sheet = sheets[currentSheet];
+            sheet.classList.add('flipped');
+            setTimeout(() => {
+                sheet.style.zIndex = 20 + currentSheet;
+            }, 600);
+            currentSheet++;
+            if (currentSheet < sheets.length) {
+                triggerTypewriter(sheets[currentSheet].querySelector('.side.front'));
+            } else {
+                book.classList.remove('open');
+                book.style.transform = 'translateX(100%)';
+            }
+        }
+    };
+
     const turnPagePrev = () => {
+        if (isMobile) {
+            handleMobilePrev();
+        } else {
+            handleDesktopPrev();
+        }
+        updateButtons();
+    };
+
+    const handleMobilePrev = () => {
+        if (currentSheet === 0 && !isBackVisible) return;
+
+        if (isBackVisible) {
+            // Flip back to show front
+            const sheet = sheets[currentSheet];
+            sheet.classList.remove('flipped');
+            sheet.style.transform = 'rotateY(0deg)';
+            isBackVisible = false;
+        } else {
+            // Bring back previous sheet from exit
+            currentSheet--;
+            const sheet = sheets[currentSheet];
+            sheet.classList.remove('exit');
+            isBackVisible = true;
+        }
+    };
+
+    const handleDesktopPrev = () => {
         if (currentSheet > 0) {
             currentSheet--;
             const sheet = sheets[currentSheet];
             sheet.classList.remove('flipped');
-
-            // Revert z-index back to stack on the right
             sheet.style.zIndex = sheets.length - currentSheet;
-
             if (currentSheet === 0) {
-                if (!isMobile) book.classList.remove('open');
-            } else if (!isMobile) {
+                book.classList.remove('open');
+            } else {
                 book.classList.add('open');
                 book.style.transform = 'translateX(0%)';
             }
         }
-        updateButtons();
     };
 
     nextBtn.addEventListener('click', turnPageNext);
     prevBtn.addEventListener('click', turnPagePrev);
 
     function updateButtons() {
-        if (currentSheet === 0) {
-            prevBtn.classList.add('hidden');
+        let isStart, isEnd;
+        if (isMobile) {
+            isStart = (currentSheet === 0 && !isBackVisible);
+            isEnd = (currentSheet === sheets.length);
         } else {
-            prevBtn.classList.remove('hidden');
+            isStart = (currentSheet === 0);
+            isEnd = (currentSheet === sheets.length);
         }
-
-        if (currentSheet === sheets.length) {
-            nextBtn.classList.add('hidden');
-        } else {
-            nextBtn.classList.remove('hidden');
-        }
+        prevBtn.classList.toggle('hidden', isStart);
+        nextBtn.classList.toggle('hidden', isEnd);
     }
 
     // --- HEART PARTICLES (RISING) ---
